@@ -7,7 +7,7 @@
   <maintainer email="vojtech.spurny@fel.cvut.cz">Vojtech Spurny</maintainer>
 
 
-  <license>MIT</license>
+  <license>Apache Software License 2.0</license>
   
   <build_depend>gazebo_ros</build_depend>
   <build_depend>roscpp</build_depend>

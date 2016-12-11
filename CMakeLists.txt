@@ -35,4 +35,5 @@ link_directories(${GAZEBO_LIBRARY_DIRS})
 include_directories(${Boost_INCLUDE_DIR} ${catkin_INCLUDE_DIRS} ${GAZEBO_INCLUDE_DIRS})
 
 add_executable(flashlight_controller  src/main.cpp)
-target_link_libraries(flashlight_controller  ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
+target_link_libraries(flashlight_controller  ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} pthread)
+
