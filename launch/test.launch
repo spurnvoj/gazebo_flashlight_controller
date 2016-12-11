@@ -1,0 +1,6 @@
+<launch>
+  <node name="gazebo_flashlight_controller" pkg="gazebo_flashlight_controller" type="flashlight_controller" output="screen">
+    <rosparam file="$(find gazebo_flashlight_controller)/config/params.yaml"/>
+  </node>
+
+</launch>

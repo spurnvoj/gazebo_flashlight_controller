@@ -17,14 +17,15 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
+#include <ros/ros.h>
 #include <gazebo/transport/transport.hh>
 #include <gazebo/msgs/msgs.hh>
 #include <gazebo/gazebo_client.hh>
 
 #include <iostream>
 
-gazebo::math::Pose offset_pose = gazebo::math::Pose(0,0.2,0,0,0,0);
-gazebo::math::Quaternion offset_rot= gazebo::math::Quaternion(0,0,3.14);
+gazebo::math::Pose offset_pose;
+gazebo::math::Quaternion offset_rot;
 gazebo::transport::PublisherPtr pub;
 
 void publish_light_pose(const gazebo::math::Pose &pose, const char* name){
@@ -45,20 +46,21 @@ void cb(ConstPosesStampedPtr &_msg){
                                                        _msg->pose(i).position().y(),
                                                        _msg->pose(i).position().z());
       
-      gazebo::math::Quaternion math_quat = gazebo::math::Quaternion(_msg->pose(i).orientation().x(),
+      gazebo::math::Quaternion math_quat = gazebo::math::Quaternion(_msg->pose(i).orientation().w(),
+                                                       _msg->pose(i).orientation().x(),
                                                        _msg->pose(i).orientation().y(),
-                                                       _msg->pose(i).orientation().z(),
-                                                       _msg->pose(i).orientation().w());
+                                                       _msg->pose(i).orientation().z());
       gazebo::math::Pose new_pose;
       new_pose.Set(math_pos, math_quat);
-      new_pose += offset_pose;                                                
-      gazebo::math::Quaternion new_orintation = new_pose.CoordRotationAdd(offset_rot);                                                
-      new_pose.Set(new_pose.pos, new_orintation);
-      
+      gazebo::math::Pose new_pos = new_pose + offset_pose;                                                
+      //gazebo::math::Vector3 new_position = new_pose.CoordPositionAdd(offset_pose);                                                
+      //gazebo::math::Quaternion new_orintation = new_pose.CoordRotationAdd(offset_rot);                                                
+      //new_pose.Set(new_position, new_orintation);
+      std::cout << new_pos << std::endl; 
       if (_msg->pose(i).name()=="uav2"){
-        publish_light_pose(new_pose,"light_1");
+        publish_light_pose(new_pos,"light_1");
       }else{
-        publish_light_pose(new_pose,"light_2");
+        publish_light_pose(new_pos,"light_2");
       }
     
     }
@@ -66,8 +68,23 @@ void cb(ConstPosesStampedPtr &_msg){
 }
 
 /////////////////////////////////////////////////
-int main(int _argc, char **_argv)
-{
+int main(int _argc, char **_argv){
+  
+  // initialize node and create no handle
+  ros::init(_argc, _argv, "gazebo_flashlight_controller");
+  ros::NodeHandle nh = ros::NodeHandle("~");
+
+  double x,y,z,roll,pitch,yaw;
+  nh.param("offset/x", x, double(0));
+  nh.param("offset/y", y, double(0));
+  nh.param("offset/z", z, double(0));
+  nh.param("offset/roll", roll, double(0));
+  nh.param("offset/pitch", pitch, double(0));
+  nh.param("offset/yaw", yaw, double(0));
+      
+  offset_pose = gazebo::math::Pose(x, y, z, 0, 0, 0);
+  offset_rot= gazebo::math::Quaternion(roll, pitch, yaw);
+  
   // Load gazebo
   gazebo::client::setup(_argc, _argv);
 
@@ -84,7 +101,7 @@ int main(int _argc, char **_argv)
   pub->WaitForConnection();
   
   // Busy wait loop...replace with your own code as needed.
-  while (true)
+  while (ros::ok())
     gazebo::common::Time::MSleep(10);
 
   // Make sure to shut everything down.

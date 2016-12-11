@@ -25,6 +25,9 @@ find_package(catkin REQUIRED COMPONENTS
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
 
+catkin_package(
+)
+
 ###########
 ## Build ##
 ###########
