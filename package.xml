@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+  <name>gazebo_flashlight_controller</name>
+  <version>0.0.0</version>
+  <description>The gazebo_flashlight_controller package</description>
+
+  <maintainer email="vojtech.spurny@fel.cvut.cz">Vojtech Spurny</maintainer>
+
+
+  <license>MIT</license>
+  
+  <build_depend>gazebo_ros</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+
+
+  <export>
+  </export>
+</package>
