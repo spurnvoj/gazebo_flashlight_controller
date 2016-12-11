@@ -25,7 +25,6 @@
 #include <iostream>
 
 gazebo::math::Pose offset_pose;
-gazebo::math::Quaternion offset_rot;
 gazebo::transport::PublisherPtr pub;
 
 void publish_light_pose(const gazebo::math::Pose &pose, const char* name){
@@ -50,17 +49,13 @@ void cb(ConstPosesStampedPtr &_msg){
                                                        _msg->pose(i).orientation().x(),
                                                        _msg->pose(i).orientation().y(),
                                                        _msg->pose(i).orientation().z());
-      gazebo::math::Pose new_pose;
-      new_pose.Set(math_pos, math_quat);
-      gazebo::math::Pose new_pos = new_pose + offset_pose;                                                
-      //gazebo::math::Vector3 new_position = new_pose.CoordPositionAdd(offset_pose);                                                
-      //gazebo::math::Quaternion new_orintation = new_pose.CoordRotationAdd(offset_rot);                                                
-      //new_pose.Set(new_position, new_orintation);
-      std::cout << new_pos << std::endl; 
+      gazebo::math::Pose actual_pose;
+      actual_pose.Set(math_pos, math_quat);
+      gazebo::math::Pose new_pose = offset_pose + actual_pose;                                                
       if (_msg->pose(i).name()=="uav2"){
-        publish_light_pose(new_pos,"light_1");
+        publish_light_pose(new_pose,"light_1");
       }else{
-        publish_light_pose(new_pos,"light_2");
+        publish_light_pose(new_pose,"light_2");
       }
     
     }
@@ -82,8 +77,7 @@ int main(int _argc, char **_argv){
   nh.param("offset/pitch", pitch, double(0));
   nh.param("offset/yaw", yaw, double(0));
       
-  offset_pose = gazebo::math::Pose(x, y, z, 0, 0, 0);
-  offset_rot= gazebo::math::Quaternion(roll, pitch, yaw);
+  offset_pose = gazebo::math::Pose(x, y, z, roll, pitch, yaw);
   
   // Load gazebo
   gazebo::client::setup(_argc, _argv);
