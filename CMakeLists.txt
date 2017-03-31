@@ -20,6 +20,8 @@ endif()
 find_package(catkin REQUIRED COMPONENTS 
   roscpp 
   gazebo_ros
+  gazebo
+  geometry_msgs
 )
 
 # Depend on system install of Gazebo

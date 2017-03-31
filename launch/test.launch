@@ -1,6 +1,8 @@
 <launch>
   <node name="gazebo_flashlight_controller" pkg="gazebo_flashlight_controller" type="flashlight_controller" output="screen">
     <rosparam file="$(find gazebo_flashlight_controller)/config/params.yaml"/>
+    <remap from="pose_offset_uav2" to="pose_offset_uav2"/>
+    <remap from="pose_offset_uav3" to="pose_offset_uav3"/>
   </node>
 
 </launch>
